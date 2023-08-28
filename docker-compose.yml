@@ -1,0 +1,65 @@
+version: '3'
+
+services:
+  flask:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    entrypoint: /everest_task/entrypoint.sh
+
+  db:
+    build:
+      context: .
+      dockerfile: DockerfileDb
+    image: mysql
+    command: --default-authentication-plugin=caching_sha2_password
+    restart: always
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: market
+      MYSQL_USER: user
+      MYSQL_PASSWORD: pass
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "db"]
+      timeout: 30s
+      retries: 3
+      interval: 30s
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+
+  redis:
+    container_name: redis
+    image: redis
+    ports:
+      - "6380:6379"
+    command: ["redis-server", "--bind", "redis", "--port", "6379"]
+    restart: always
+    depends_on:
+      - flask
+      - db
+
+  celery:
+    build:
+      context: .
+      dockerfile: DockerfileCelery
+    container_name: celery_market
+    restart: always
+    command: celery -A market.celery worker --loglevel=INFO
+    volumes:
+      - .:/code
+    depends_on:
+      - redis
+      - flask
+      - db
