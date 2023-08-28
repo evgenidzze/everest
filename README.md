@@ -1,3 +1,11 @@
+# Build
+### docker-compose up --build
+ - If unhealthy - repeat docker-compose up
+
+# Dump
+$ docker exec -i welcome-to-docker-db-1 mysql -u root -proot < docker-entrypoint-initdb.d/init_db.sql
+_____________________________________________________________________________________________________
+
 # JSON-RPC API для отримання статусу замовлення
 
 Цей JSON-RPC API надає можливість отримати статус замовлення за номером замовлення. Для взаємодії з API потрібна авторизація.
