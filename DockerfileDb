@@ -1,5 +1,0 @@
-FROM mysql
-
-# Скопіювати файли з локальної папки ./dump до папки в контейнері /docker-entrypoint-initdb.d
-COPY ./docker-entrypoint-initdb.d /docker-entrypoint-initdb.d
-

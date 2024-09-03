@@ -1,8 +1,10 @@
 from celery import Celery
 
+from config import REDIS_HOST
+
 # celery config
-CELERY_BROKER_URL = 'redis://redis:6379/0'
-CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
+CELERY_BROKER_URL = f'redis://{REDIS_HOST}/0'
+CELERY_RESULT_BACKEND = f'redis://{REDIS_HOST}/0'
 
 
 # initialize celery app

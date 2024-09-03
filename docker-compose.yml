@@ -10,15 +10,11 @@ services:
     restart: always
     depends_on:
       db:
-        condition: service_healthy
+        condition: service_started
     entrypoint: /everest_task/entrypoint.sh
 
   db:
-    build:
-      context: .
-      dockerfile: DockerfileDb
     image: mysql
-    command: --default-authentication-plugin=caching_sha2_password
     restart: always
     ports:
       - "3307:3306"
@@ -28,10 +24,9 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: pass
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "db"]
-      timeout: 30s
-      retries: 3
-      interval: 30s
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
 
   adminer:
     image: adminer

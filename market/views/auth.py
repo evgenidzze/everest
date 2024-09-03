@@ -31,6 +31,7 @@ def load_user(user_id):
 def login_page():
     session['logged_in'] = True
     form = LogInForm()
+    print(form.username.data)
     if form.validate_on_submit():
         attempted_user = User.query.filter_by(username=form.username.data).first()
         if attempted_user and attempted_user.check_password_correction(attempted_password=form.password.data):

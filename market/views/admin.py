@@ -3,7 +3,7 @@ from flask_admin import AdminIndexView, expose, Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_login import current_user
 
-from market import app, celery, db
+from market import app, celery, db, socketio
 from market.models import Order, Item, User
 
 
@@ -39,14 +39,21 @@ class OrderViewAdmin(SecureModelView):
     }
 
     def on_model_change(self, form, model, is_created):
-        if form.data['status']:
+        if form.data.get('status'):
             create_order_status_history.delay(model.id, model.status)
+
+
+@socketio.on('connect')
+def connect_handler():
+    print('hello')
 
 
 @celery.task
 def create_order_status_history(order_id, status):
-    with open('order_status_history', 'a') as file:
+    with open('order_status_history', 'a+') as file:
         file.write(f'Order: {order_id} changed status to {status}\n')
+    print(13123123)
+    socketio.emit('status_update', {'order_id': order_id, 'status': status})
 
 
 admin.add_view(SecureModelView(User, db.session))

@@ -3,7 +3,7 @@
  - If unhealthy - repeat docker-compose up
 
 # Dump
-$ docker exec -i welcome-to-docker-db-1 mysql -u root -proot < docker-entrypoint-initdb.d/init_db.sql
+$ docker exec -i welcome-to-docker-db-1 mysql -u root -proot market > docker-entrypoint-initdb.d/init_db.sql
 _____________________________________________________________________________________________________
 
 # JSON-RPC API для отримання статусу замовлення

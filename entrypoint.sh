@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Виконуємо міграції
 flask db migrate
 flask db upgrade
 
